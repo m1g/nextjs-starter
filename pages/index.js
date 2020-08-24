@@ -1,65 +1,68 @@
-import Head from 'next/head'
-import styles from '../styles/Home.module.css'
+import Head from 'next/head';
+import Header from '../components/Header';
+import Close from '../components/icons/Close';
+import Nav from '../components/Nav';
+import { useBreakpoint } from '../hooks';
+import Transition from '../helpers/Transition';
+// import styles from '../styles/Home.module.css';
 
 export default function Home() {
+  const [isClosed, setClosed] = React.useState(false);
+
+  const isStatic = useBreakpoint('sm');
+
   return (
-    <div className={styles.container}>
+    <div className="flex bg-gray-100">
       <Head>
-        <title>Create Next App</title>
+        <title>Starter App</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-
-      <main className={styles.main}>
-        <h1 className={styles.title}>
-          Welcome to <a href="https://nextjs.org">Next.js!</a>
-        </h1>
-
-        <p className={styles.description}>
-          Get started by editing{' '}
-          <code className={styles.code}>pages/index.js</code>
-        </p>
-
-        <div className={styles.grid}>
-          <a href="https://nextjs.org/docs" className={styles.card}>
-            <h3>Documentation &rarr;</h3>
-            <p>Find in-depth information about Next.js features and API.</p>
-          </a>
-
-          <a href="https://nextjs.org/learn" className={styles.card}>
-            <h3>Learn &rarr;</h3>
-            <p>Learn about Next.js in an interactive course with quizzes!</p>
-          </a>
-
-          <a
-            href="https://github.com/vercel/next.js/tree/master/examples"
-            className={styles.card}
-          >
-            <h3>Examples &rarr;</h3>
-            <p>Discover and deploy boilerplate example Next.js projects.</p>
-          </a>
-
-          <a
-            href="https://vercel.com/import?filter=next.js&utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-          >
-            <h3>Deploy &rarr;</h3>
-            <p>
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
-        </div>
-      </main>
-
-      <footer className={styles.footer}>
-        <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
+      <Transition
+        show={isStatic || !isClosed}
+        enter="transition-all duration-300"
+        enterFrom="-ml-64"
+        enterTo="ml-0"
+        leave="transition-all duration-300"
+        leaveTo="-ml-64"
+      >
+        <aside
+          className={`z-20 bg-white w-64 min-h-screen flex flex-col ${
+            isStatic ? '' : 'fixed'
+          }`}
         >
-          Powered by{' '}
-          <img src="/vercel.svg" alt="Vercel Logo" className={styles.logo} />
-        </a>
-      </footer>
+          <div className="bg-white border-r border-b px-4 h-10 flex items-center justify-between">
+            <span className="text-blue py-2">Starter</span>
+            {!isStatic && (
+              <button
+                tabIndex="1"
+                aria-label="Close Menu"
+                className="w-7 p-1"
+                onClick={() => setClosed(true)}
+              >
+                <Close />
+              </button>
+            )}
+          </div>
+          <div className="border-r flex-grow">
+            <Nav />
+          </div>
+        </aside>
+      </Transition>
+      <Transition
+        appear={true}
+        show={!isStatic && !isClosed}
+        enter="transition-opacity duration-200"
+        enterFrom="opacity-0"
+        enterTo="opacity-50"
+        leave="transition-opacity duration-200"
+        leaveFrom="opacity-50"
+        leaveTo="opacity-0"
+      >
+        <div className="fixed inset-0 bg-black opacity-50" />
+      </Transition>
+      <main className="flex-grow flex flex-col min-h-screen">
+        <Header isClosed={isClosed} setClosed={setClosed} isStatic={isStatic} />
+      </main>
     </div>
-  )
+  );
 }
