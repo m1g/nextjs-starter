@@ -5,6 +5,16 @@ import MenuIcon from '../components/icons/MenuIcon';
 import Head from 'next/head';
 
 const Menu = ({ children, isClosed, setClosed, isStatic }) => {
+  const [fixed, setFixed] = React.useState('');
+
+  React.useEffect(() => {
+    if (!isStatic) {
+      setFixed('fixed');
+    } else {
+      setFixed('');
+    }
+  }, [isStatic]);
+
   return (
     <div className="flex bg-gray-100">
       <Head>
@@ -20,9 +30,7 @@ const Menu = ({ children, isClosed, setClosed, isStatic }) => {
         leaveTo="-ml-64"
       >
         <aside
-          className={`z-20 bg-white w-64 min-h-screen flex flex-col ${
-            isStatic ? '' : 'fixed'
-          }`}
+          className={`z-20 bg-white w-64 min-h-screen flex flex-col ${fixed}`}
         >
           <FocusTrap isActive={!isStatic}>
             <div className="bg-white border-r border-b px-4 h-10 flex items-center justify-between">
@@ -30,7 +38,7 @@ const Menu = ({ children, isClosed, setClosed, isStatic }) => {
               {!isStatic && (
                 <button
                   aria-label="Close Menu"
-                  className="w-7 p-1"
+                  className="w-6 p-1"
                   onClick={() => setClosed(true)}
                 >
                   <CloseIcon />
@@ -39,7 +47,7 @@ const Menu = ({ children, isClosed, setClosed, isStatic }) => {
             </div>
             <div className="border-r flex-grow">
               <nav>
-                <ul>
+                <ul className="h-screen">
                   <li className="p-3">
                     <a href="">Home</a>
                   </li>
@@ -71,7 +79,7 @@ const Menu = ({ children, isClosed, setClosed, isStatic }) => {
         leaveFrom="opacity-75"
         leaveTo="opacity-0"
       >
-        <div className="fixed inset-0 bg-black opacity-0" />
+        <div className="fixed inset-0 bg-black opacity-0"></div>
       </Transition>
       <main className="flex-grow flex flex-col min-h-screen">
         <header className="bg-white border-b h-10 flex items-center justify-center">
@@ -79,7 +87,7 @@ const Menu = ({ children, isClosed, setClosed, isStatic }) => {
             <button
               aria-hidden={!isClosed}
               aria-label="Open Menu"
-              className="w-7 p-1"
+              className="w-6 p-1"
               onClick={() => setClosed(false)}
             >
               <MenuIcon />

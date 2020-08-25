@@ -6,11 +6,11 @@ const Dashboard = ({ name, bio, blog }) => (
   </>
 );
 
-Dashboard.getInitialProps = async () => {
-  const res = await fetch('https://api.github.com/users/m1g');
-  const user = await res.json();
+// Dashboard.getInitialProps = async () => {
+//   const res = await fetch('https://api.github.com/users/m1g');
+//   const user = await res.json();
 
-  return user;
-};
+//   return user;
+// };
 
 export default Dashboard;
