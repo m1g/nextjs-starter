@@ -1,13 +1,20 @@
+/**
+ * Original source: https://gist.github.com/adamwathan/3b9f3ad1a285a2d1b482769aeb862467
+ * Author: Adam Wathan
+ *
+ * Use Jacob Paris' modifications to the enterTo and leaveTo classes
+ * source: https://github.com/JacobParis/sliding-sidebar/blob/master/app/components/Transition.js
+ */
 import { CSSTransition as ReactCSSTransition } from 'react-transition-group';
-import { useRef, useEffect, useContext } from 'react';
+import * as React from 'react';
 
 const TransitionContext = React.createContext({
   parent: {},
 });
 
 function useIsInitialRender() {
-  const isInitialRender = useRef(true);
-  useEffect(() => {
+  const isInitialRender = React.useRef(true);
+  React.useEffect(() => {
     isInitialRender.current = false;
   }, []);
   return isInitialRender.current;
@@ -48,24 +55,26 @@ function CSSTransition({
         node.addEventListener('transitionend', done, false);
       }}
       onEnter={(node) => {
+        removeClasses(node, [...leaveToClasses]);
         addClasses(node, [...enterClasses, ...enterFromClasses]);
       }}
       onEntering={(node) => {
-        removeClasses(node, enterFromClasses);
-        addClasses(node, enterToClasses);
+        removeClasses(node, [...enterFromClasses]);
+        addClasses(node, [...enterToClasses]);
       }}
       onEntered={(node) => {
-        removeClasses(node, [...enterToClasses, ...enterClasses]);
+        removeClasses(node, [...enterClasses]);
       }}
       onExit={(node) => {
+        removeClasses(node, [...enterToClasses]);
         addClasses(node, [...leaveClasses, ...leaveFromClasses]);
       }}
       onExiting={(node) => {
-        removeClasses(node, leaveFromClasses);
-        addClasses(node, leaveToClasses);
+        removeClasses(node, [...leaveFromClasses]);
+        addClasses(node, [...leaveToClasses]);
       }}
       onExited={(node) => {
-        removeClasses(node, [...leaveToClasses, ...leaveClasses]);
+        removeClasses(node, [...leaveClasses]);
       }}
     >
       {children}
@@ -74,7 +83,7 @@ function CSSTransition({
 }
 
 function Transition({ show, appear, ...rest }) {
-  const { parent } = useContext(TransitionContext);
+  const { parent } = React.useContext(TransitionContext);
   const isInitialRender = useIsInitialRender();
   const isChild = show === undefined;
 

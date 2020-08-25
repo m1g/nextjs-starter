@@ -6,27 +6,26 @@ export default function FocusTrap({ isActive, children }) {
   React.useEffect(() => {
     document.addEventListener('focusin', trapFocus);
 
-    return function cleanup() {
-      document.removeEventListener('focusin', trapFocus);
-    };
+    return () => document.removeEventListener('focusin', trapFocus);
 
     function trapFocus(e) {
       if (!isActive) {
         return;
       }
 
+      let elements;
       if (e.target === topTabTrap.current) {
-        const elements = getFocusableElements();
+        elements = getFocusableElements();
 
-        if (elements.length > 0) {
+        if (!!elements.length) {
           const lastElement = elements[elements.length - 1];
           lastElement.focus();
         }
       }
       if (e.target === bottomTabTrap.current) {
-        const elements = getFocusableElements();
+        elements = getFocusableElements();
 
-        if (elements.length > 0) {
+        if (!!elements.length) {
           const firstElement = elements[0];
           firstElement.focus();
         }
